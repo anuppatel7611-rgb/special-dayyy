@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Day</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Pacifico&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            /* Soft pink/warm gradient to match the cake */
+            background: linear-gradient(135deg, #f5d3d3 0%, #f9e8e8 50%, #f5d3d3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* =========================================
+           PAGE 1: COUNTDOWN
+           ========================================= */
+        #countdown-page {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 90%;
+            width: 600px;
+            transition: opacity 0.5s ease;
+        }
+
+        .title-text {
+            font-family: 'Pacifico', cursive;
+            color: #d87093;
+            margin-bottom: 25px;
+            font-size: 2.8rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .time-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            min-width: 80px;
+            box-shadow: 0 5px 15px rgba(216, 112, 147, 0.15);
+            border: 1px solid #fce4ec;
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #d87093;
+        }
+
+        .time-box p {
+            font-size: 0.9rem;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .action-btn {
+            padding: 15px 45px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            background: #d87093;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(216, 112, 147, 0.4);
+        }
+
+        .action-btn:disabled {
+            background: #d3d3d3;
+            cursor: not-allowed;
+            box-shadow: none;
+            color: #888;
+        }
+
+        .action-btn:not(:disabled):hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(216, 112, 147, 0.6);
+            background: #c26081;
+        }
+
+
+        /* =========================================
+           PAGE 2: CELEBRATION (PHOTO & MESSAGE)
+           ========================================= */
+        #celebration-page {
+            display: none; /* Hidden by default */
+            text-align: center;
+            width: 100%;
+            min-height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+            padding: 20px;
+        }
+
+        .image-container {
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            overflow: hidden;
+            background: #fff;
+            border: 8px solid #fff;
+        }
+
+        #cake-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* The Button on the photo */
+        #cut-button {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 40px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            background-color: rgba(216, 112, 147, 0.9);
+            border: 3px solid #fff;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        #cut-button:hover {
+            background-color: #fff;
+            color: #d87093;
+            border-color: #d87093;
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        /* The Greeting Message Below */
+        #greeting-message {
+            margin-top: 35px;
+            max-width: 800px;
+            opacity: 0; /* Hidden initially */
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        #greeting-message h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            color: #d87093;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        #greeting-message p {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        /* Animation class to show the message */
+        .show-greeting {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        
+        /* Optional: Add a subtle pop effect when the cake is cut */
+        .cake-cut-anim {
+            animation: slightPop 0.5s ease;
+        }
+
+        @keyframes slightPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media(max-width: 600px) {
+            .timer { gap: 10px; }
+            .time-box { min-width: 65px; padding: 12px; }
+            .time-box span { font-size: 1.8rem; }
+            .title-text { font-size: 2.2rem; }
+            #cut-button { bottom: 20px; padding: 10px 25px; font-size: 1.1rem; }
+            #greeting-message h1 { font-size: 2.2rem; }
+            #greeting-message p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Element -->
+    <audio id="bg-music" src="madeinjapan.mp3" preload="auto"></audio>
+
+    <!-- =========================================
+         PAGE 1: COUNTDOWN TIMER 
+         ========================================= -->
+    <div id="countdown-page">
+        <h1 class="title-text">Waiting for Your Special Day! 💖</h1>
+        <div class="timer">
+            <div class="time-box">
+                <span id="days">00</span>
+                <p>Days</p>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <p>Hours</p>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <p>Minutes</p>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <p>Seconds</p>
+            </div>
+        </div>
+        <button id="unlock-btn" class="action-btn" disabled>Unlock Surprise 🎁</button>
+    </div>
+
+    <!-- =========================================
+         PAGE 2: CAKE CUTTING & GREETING 
+         ========================================= -->
+    <div id="celebration-page">
+        
+        <!-- The Cake Image Container -->
+        <div class="image-container">
+            <!-- Starting Image: Uncut Cake -->
+            <img id="cake-image" src="uncut.png" alt="Ragini's Birthday Cake">
+            
+            <!-- Button overlaid on the photo -->
+            <button id="cut-button">Tap to Cut 🔪</button>
+        </div>
+
+        <!-- The Greeting Message (Appears below the cake after cutting) -->
+        <div id="greeting-message">
+            <h1>Happy Birthday Sneha ! 🎉</h1>
+            <p>"Hope your birthday is as beautiful, amazing, and vibrant as your Smile ! Have a Wonderful today and eat lots of cake. Happy Birthday! 🍰🥳"</p>
+        </div>
+
+    </div>
+
+    <script>
+       // ==========================================
+       // 1. TIMER CONFIGURATION (Set to Oct 13)
+       // Format: YYYY-MM-DDTHH:MM:SS
+       // ==========================================
+        const currentYear = new Date().getFullYear();
+        const birthdayDate = new Date(`${currentYear}-10-13T00:00:00`).getTime();
+
+        const unlockBtn = document.getElementById("unlock-btn");
+        const countdownPage = document.getElementById("countdown-page");
+        const celebrationPage = document.getElementById("celebration-page");
+        const bgMusic = document.getElementById("bg-music"); // Get audio element
+
+        // --- Countdown Logic ---
+        const timerInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = birthdayDate - now;
+
+            if (distance <= 0) {
+                // Timer finished!
+                clearInterval(timerInterval);
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                
+                unlockBtn.disabled = false;
+                unlockBtn.innerText = "Click to Enter! ✨";
+                return;
+            }
+
+            // Calculate time left
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update UI
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+
+        // --- Page Transition Logic (Unlock Button Click) ---
+        unlockBtn.addEventListener("click", () => {
+            // Play background music
+            bgMusic.play().catch(error => {
+                console.log("Audio playback failed:", error);
+            });
+
+            // Fade out countdown
+            countdownPage.style.opacity = "0";
+            
+            setTimeout(() => {
+                // Hide countdown, show celebration page layout
+                countdownPage.style.display = "none";
+                celebrationPage.style.display = "flex";
+                
+                // Fade in celebration page
+                setTimeout(() => {
+                    celebrationPage.style.opacity = "1";
+                }, 50);
+            }, 500); // Matches CSS transition time
+        });
+
+        // --- Cake Cutting Logic ---
+        const cakeImage = document.getElementById('cake-image');
+        const cutButton = document.getElementById('cut-button');
+        const greetingMessage = document.getElementById('greeting-message');
+        let isCut = false;
+
+        function cutTheCake() {
+            if (isCut) return; // Prevent double clicking
+            isCut = true;
+
+            // 1. Fade the original image out slightly for a smooth transition
+            cakeImage.style.opacity = '0.3';
+            
+            // 2. Hide the "Tap to Cut" button permanently
+            cutButton.style.display = 'none';
+
+            // 3. Swap the image and reveal the message
+            setTimeout(() => {
+                // Swap to the Cut Cake Image
+                cakeImage.src = 'cut.png';
+                cakeImage.style.opacity = '1';
+                cakeImage.classList.add('cake-cut-anim'); // Add a subtle pop animation
+                
+                // Show the beautiful greeting message below the cake
+                greetingMessage.classList.add('show-greeting');
+            }, 400); 
+        }
+
+        // Add event listeners for the cut button (Click for PC, Touchstart for Mobile)
+        cutButton.addEventListener('click', cutTheCake);
+        cutButton.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            cutTheCake();
+        }, { passive: false });
+
+    </script>
+</body>
+</html>
